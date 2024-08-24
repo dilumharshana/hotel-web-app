@@ -1,132 +1,171 @@
-import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import React, { useEffect, useState } from "react";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
+import {
+  TextField,
+  Button,
+  Typography,
+  Container,
+  Grid,
+  Box
+} from "@mui/material";
+import axios, { AxiosResponse } from "axios";
+import { Route, useNavigate } from "react-router-dom";
 
-function Copyright(props: any) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+const validationSchema = Yup.object().shape({
+  name: Yup.string()
+    .matches(/^[A-Za-z\s]+$/, "Name must contain only letters")
+    .required("Name is required"),
+  email: Yup.string().email("Invalid email").required("Email is required"),
+  contactNumber: Yup.string()
+    .matches(/^\d{10}$/, "Contact number must be exactly 10 digits")
+    .required("Contact number is required"),
+  password: Yup.string()
+    .min(6, "Password must be at least 6 characters")
+    .required("Password is required"),
+  verifyPassword: Yup.string()
+    .oneOf([Yup.ref("password")], "Passwords must match")
+    .required("Please verify your password")
+});
 
-// TODO remove, this demo shouldn't need to reset the theme.
-const defaultTheme = createTheme();
+const RegistrationForm: React.FC = () => {
+  const [customerCreated, setCustomerCreated] = useState(false);
+  const navigate = useNavigate();
 
-export default function CustomerSignUp() {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+  useEffect(() => {
+    if (customerCreated) {
+      setTimeout(() => navigate("/login"), 2000);
+    }
+  }, [customerCreated]);
+
+  const initialValues = {
+    name: "",
+    email: "",
+    contactNumber: "",
+    password: "",
+    verifyPassword: ""
+  };
+
+  const handleSubmit = async (
+    values: typeof initialValues,
+    { setSubmitting }: any
+  ) => {
+    try {
+      // Handle form submission here
+      const response: any = await axios.post(
+        "http://127.0.0.1:5000/customer",
+        values
+      );
+
+      console.log(response);
+
+      if (response.data.customerId) {
+        setCustomerCreated(true);
+      }
+
+      setSubmitting(false);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
-    <ThemeProvider theme={defaultTheme}>
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <Box
-          sx={{
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign up
-          </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  autoComplete="given-name"
-                  name="firstName"
-                  required
-                  fullWidth
-                  id="firstName"
-                  label="First Name"
-                  autoFocus
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  required
-                  fullWidth
-                  id="lastName"
-                  label="Last Name"
-                  name="lastName"
-                  autoComplete="family-name"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="new-password"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={<Checkbox value="allowExtraEmails" color="primary" />}
-                  label="I want to receive inspiration, marketing promotions and updates via email."
-                />
-              </Grid>
-            </Grid>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+    <Grid container className="registration-container">
+      <Grid item xs={12} md={6} className="banner-panel">
+        <Typography variant="h2">Ocean View</Typography>
+      </Grid>
+      <Grid item xs={12} md={6} className="form-panel">
+        {!customerCreated && (
+          <Container maxWidth="sm">
+            <Box mb={4}>
+              <Typography variant="h4" className="form-title basic-font-color">
+                Customer Registration
+              </Typography>
+            </Box>
+            <Formik
+              initialValues={initialValues}
+              validationSchema={validationSchema}
+              onSubmit={handleSubmit}
             >
-              Sign Up
-            </Button>
-            <Grid container justifyContent="flex-end">
-              <Grid item>
-                <Link href="#" variant="body2">
-                  Already have an account? Sign in
-                </Link>
-              </Grid>
-            </Grid>
+              {({ errors, touched, isValid, dirty }) => (
+                <Form>
+                  <div className="form-field">
+                    <Field
+                      as={TextField}
+                      fullWidth
+                      name="name"
+                      label="Name"
+                      error={touched.name && errors.name}
+                      helperText={<ErrorMessage name="name" />}
+                    />
+                  </div>
+                  <div className="form-field">
+                    <Field
+                      as={TextField}
+                      fullWidth
+                      name="email"
+                      label="Email"
+                      error={touched.email && errors.email}
+                      helperText={<ErrorMessage name="email" />}
+                    />
+                  </div>
+                  <div className="form-field">
+                    <Field
+                      as={TextField}
+                      fullWidth
+                      name="contactNumber"
+                      label="Contact Number"
+                      error={touched.contactNumber && errors.contactNumber}
+                      helperText={<ErrorMessage name="contactNumber" />}
+                    />
+                  </div>
+                  <div className="form-field">
+                    <Field
+                      as={TextField}
+                      fullWidth
+                      name="password"
+                      label="Password"
+                      type="password"
+                      error={touched.password && errors.password}
+                      helperText={<ErrorMessage name="password" />}
+                    />
+                  </div>
+                  <div className="form-field">
+                    <Field
+                      as={TextField}
+                      fullWidth
+                      name="verifyPassword"
+                      label="Verify Password"
+                      type="password"
+                      error={touched.verifyPassword && errors.verifyPassword}
+                      helperText={<ErrorMessage name="verifyPassword" />}
+                    />
+                  </div>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    color="primary"
+                    fullWidth
+                    className="submit-button"
+                    disabled={!(isValid && dirty)}
+                  >
+                    Register
+                  </Button>
+                </Form>
+              )}
+            </Formik>
+          </Container>
+        )}
+        {customerCreated && (
+          <Box display="flex" justifyContent="center" alignItems="center">
+            <Typography variant="h4" className="form-title basic-font-color">
+              Registration Complete !. Thank you
+            </Typography>
           </Box>
-        </Box>
-        <Copyright sx={{ mt: 5 }} />
-      </Container>
-    </ThemeProvider>
+        )}
+      </Grid>
+    </Grid>
   );
-}
+};
+
+export default RegistrationForm;
