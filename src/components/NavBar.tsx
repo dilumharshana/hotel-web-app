@@ -16,7 +16,7 @@ export default function Navbar({ title = "" }) {
             aria-label="menu"
             sx={{ mr: 2 }}
           >
-            <MenuIcon />
+            <img src="/logo.png" width="50px" height="50px" alt="" />
           </IconButton>
           <Typography variant="h6" color="inherit" component="div">
             {title}
