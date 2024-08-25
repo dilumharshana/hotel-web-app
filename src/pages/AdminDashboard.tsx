@@ -58,7 +58,7 @@ const AdminDashboard = () => {
           <TabPanel value={value} index={1}>
             Users Content
           </TabPanel>
-          <TabPanel value={value} index={2}>
+          <TabPanel value={value} index={2} className="full-screen-parent-box">
             <Offers />
           </TabPanel>
           <TabPanel value={value} index={3}>

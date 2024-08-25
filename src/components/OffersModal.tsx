@@ -12,6 +12,7 @@ import * as Yup from "yup";
 import axios from "axios";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { Datepicker } from "flowbite-react";
+import toast, { Toaster } from "react-hot-toast";
 
 export const OffersModal = ({ mode = "create" }) => {
   const [open, setOpen] = useState(false);
@@ -39,15 +40,18 @@ export const OffersModal = ({ mode = "create" }) => {
       console.log(values);
 
       // Handle form submission here
-      const response: any = await axios.post(
-        "http://127.0.0.1:5000/customer",
-        values
-      );
+      const response: any = await axios.post("http://127.0.0.1:5000/offer", {
+        ...values,
+        endingDate: new Date(values.endingDate).toLocaleDateString("en-CA")
+      });
 
       console.log(response);
 
-      if (response.data.customerId) {
+      if (response.data.offerId) {
         handleClose();
+        toast("Offer created successfully !.", {
+          icon: "✅"
+        });
       }
 
       setSubmitting(false);
@@ -60,6 +64,7 @@ export const OffersModal = ({ mode = "create" }) => {
 
   return (
     <>
+      <Toaster />
       <Button variant="outlined" onClick={handleOpen}>
         {`Create`} Offer
       </Button>

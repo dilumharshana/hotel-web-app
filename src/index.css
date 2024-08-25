@@ -119,3 +119,12 @@
 .gray-color-font {
   color: gray;
 }
+
+.full-screen-parent-box {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.loading-container {
+  margin-top: 20% !important;
+}

@@ -1,12 +1,21 @@
-import { Button, Container, Grid } from "@mui/material";
+import { Box, Button, CircularProgress, Container, Grid } from "@mui/material";
 import OfferCard from "../components/OfferCard";
 import { OffersModal } from "../components/OffersModal";
+import { useState } from "react";
+import { LoadingComponent } from "../components/LoadingComponent";
 
 export const Offers = () => {
+  const [offersLoading, setOffersLoading] = useState(true);
+
   return (
     <>
-      <Container>
-        <Grid container direction="row">
+      {offersLoading && (
+        <LoadingComponent title="Just a movement, Loading Offers..." />
+      )}
+
+      {!offersLoading && (
+        <Container>
+          {/* <Grid container direction="row">
           <Grid display="flex" justifyContent="end" sm={12} mb={5}>
             <OffersModal />
           </Grid>
@@ -27,8 +36,9 @@ export const Offers = () => {
               <OfferCard />
             </Grid>
           </Grid>
-        </Grid>
-      </Container>
+        </Grid> */}
+        </Container>
+      )}
     </>
   );
 };
