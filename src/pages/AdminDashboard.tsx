@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Grid, Tab, Tabs, Typography, Box } from "@mui/material";
 import { Offers } from "./Offers";
+import { Services } from "./Services";
 
 // Tab panel component
 function TabPanel(props: any) {
@@ -62,7 +63,7 @@ const AdminDashboard = () => {
             <Offers />
           </TabPanel>
           <TabPanel value={value} index={3}>
-            Services Content
+            <Services />
           </TabPanel>
           <TabPanel value={value} index={4}>
             Rooms Content
