@@ -32,7 +32,7 @@ export default function App() {
 
   return (
     <>
-      <Navbar title="Ocen View - Admin Dashboard" />
+      <Navbar title="Ocen View Hotel" />
       <RouterProvider router={router} />
     </>
   );

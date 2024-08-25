@@ -1,5 +1,3 @@
-import { useState } from "react";
-import ModalComponent from "../components/Modal";
 import {
   Box,
   Button,
@@ -8,28 +6,49 @@ import {
   TextField,
   Typography
 } from "@mui/material";
-import * as Yup from "yup";
 import axios from "axios";
-import { ErrorMessage, Field, Form, Formik } from "formik";
 import { Datepicker } from "flowbite-react";
-import toast, { Toaster } from "react-hot-toast";
+import { ErrorMessage, Field, Form, Formik } from "formik";
 
-export const OffersModal = ({ mode = "create" }) => {
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+import * as Yup from "yup";
+import ModalComponent from "../components/Modal";
 
+export const OffersModal = ({
+  open = false,
+  handleClose = () => {},
+  mode = "create",
+  data = null,
+  handleLoadOffers = () => {},
+  toast = () => {}
+}: {
+  open: boolean;
+  handleClose: Function;
+  mode: string;
+  data: Object | null;
+  handleLoadOffers: Function;
+  toast: Function;
+}) => {
   const validationSchema = Yup.object().shape({
     name: Yup.string().required("Name is required"),
     description: Yup.string().required("Name is required")
   });
 
+  const selectedDate = data?.ENDING_DATE
+    ? new Date(data?.ENDING_DATE).toLocaleDateString()
+    : new Date().toLocaleDateString();
+
+  let isActive = true;
+
+  if (data) {
+    isActive = data?.IS_ACTIVE == 1 ? true : false;
+  }
+
   const initialValues = {
-    name: "",
-    description: "",
-    isActive: "",
-    thumbnailUrl: "",
-    endingDate: new Date().toDateString()
+    name: data?.NAME ?? "",
+    description: data?.DESCRIPTION ?? "",
+    isActive: isActive,
+    thumbnailUrl: data?.THUMBNAIL ?? "",
+    endingDate: selectedDate
   };
 
   const handleSubmit = async (
@@ -40,23 +59,35 @@ export const OffersModal = ({ mode = "create" }) => {
       console.log(values);
 
       // Handle form submission here
-      const response: any = await axios.post("http://127.0.0.1:5000/offer", {
-        ...values,
-        endingDate: new Date(values.endingDate).toLocaleDateString("en-CA")
-      });
+      let response: any = null;
 
-      console.log(response);
+      const payload = {
+        ...values,
+        isActive: values.isActive === true ? 1 : 0,
+        endingDate: new Date(values.endingDate).toLocaleDateString("en-CA")
+      };
+
+      if (mode == "create") {
+        response = await axios.post("http://127.0.0.1:5000/offer", payload);
+      } else {
+        response = await axios.put("http://127.0.0.1:5000/offer", {
+          ...payload,
+          id: data?.ID
+        });
+      }
 
       if (response.data.offerId) {
-        handleClose();
         toast("Offer created successfully !.", {
           icon: "✅"
         });
+        handleClose();
       }
 
       setSubmitting(false);
     } catch (error) {
       console.log(error);
+    } finally {
+      handleLoadOffers();
     }
   };
 
@@ -64,10 +95,6 @@ export const OffersModal = ({ mode = "create" }) => {
 
   return (
     <>
-      <Toaster />
-      <Button variant="outlined" onClick={handleOpen}>
-        {`Create`} Offer
-      </Button>
       <ModalComponent open={open} handleClose={handleClose}>
         <Container maxWidth="sm">
           <Box mb={4}>
@@ -99,7 +126,7 @@ export const OffersModal = ({ mode = "create" }) => {
                     name="description"
                     label="Description"
                     error={touched.description && errors.description}
-                    helperText={<ErrorMessage name="email" />}
+                    helperText={<ErrorMessage name="description" />}
                   />
                 </div>
                 <div className="form-field">
@@ -122,25 +149,29 @@ export const OffersModal = ({ mode = "create" }) => {
                         onSelectedDateChanged={(date) =>
                           setFieldValue("endingDate", date)
                         }
+                        value={selectedDate}
                       />
                     </Box>
                   </Box>
                 </div>
                 <div className="form-field">
-                  <Box display="flex" alignItems="center">
-                    <Box>
-                      <Field
-                        as={Checkbox}
-                        fullWidth
-                        name="isActive"
-                        label="Offer is active"
-                        error={touched.isActive && errors.isActive}
-                        helperText={<ErrorMessage name="verifyPassword" />}
+                  <Box display="flex" alignItems="center" gap={1}>
+                    <Box className="offer-end-date-input-label-container">
+                      Offer is active
+                    </Box>
+                    <Box className="offer-end-date-input-container">
+                      <Checkbox
+                        onChange={(e) => {
+                          console.log(e.target.checked);
+
+                          setFieldValue("isActive", e.target.checked);
+                        }}
+                        defaultChecked={isActive}
                       />
                     </Box>
-                    <Box className="gray-color-font">Offer is Active</Box>
                   </Box>
                 </div>
+
                 <Button
                   type="submit"
                   variant="contained"
@@ -149,7 +180,7 @@ export const OffersModal = ({ mode = "create" }) => {
                   className="submit-button"
                   disabled={!(isValid && dirty)}
                 >
-                  Create
+                  {formType}
                 </Button>
               </Form>
             )}
