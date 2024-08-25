@@ -15,10 +15,14 @@ import axios from "axios";
 
 export default function OfferCard({
   offer,
-  handleOpenEditOffer
+  handleOpenEditOffer,
+  handleLoadOffers,
+  toast
 }: {
   offer: Object;
   handleOpenEditOffer: Function;
+  handleLoadOffers: Function;
+  toast: Function;
 }) {
   const [loading, setLoading] = useState(false);
 
@@ -26,7 +30,7 @@ export default function OfferCard({
     try {
       setLoading(true);
 
-      await axios.put("http://127.0.0.1:5000/offer", {
+      await axios.put("http://127.0.0.1:5000/activate-offer", {
         activation: offer?.IS_ACTIVE ? 0 : 1,
         id: offer?.ID
       });
@@ -41,10 +45,14 @@ export default function OfferCard({
     try {
       setLoading(true);
 
-      await axios.delete("http://127.0.0.1:5000/offer", { id: offer?.ID });
+      await axios.delete(`http://127.0.0.1:5000/offer/${offer?.ID}`);
     } catch (error) {
       console.log(error);
     } finally {
+      toast("Offer deleted successfully !.", {
+        icon: "✅"
+      });
+      handleLoadOffers();
       setLoading(false);
     }
   };

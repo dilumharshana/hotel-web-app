@@ -90,6 +90,8 @@ export const Offers = () => {
                   <OfferCard
                     offer={offer}
                     handleOpenEditOffer={handleOpenEditOffer}
+                    handleLoadOffers={handleLoadOffers}
+                    toast={toast}
                   />
                 </Grid>
               ))}
