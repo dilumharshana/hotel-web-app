@@ -1,78 +1,68 @@
 import DeleteIcon from "@mui/icons-material/Delete";
-import { Box, Button } from "@mui/material";
+import PlayCircleFilledWhiteIcon from "@mui/icons-material/PlayCircleFilledWhite";
+import { Box, Button, Chip } from "@mui/material";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import PlayCircleFilledWhiteIcon from "@mui/icons-material/PlayCircleFilledWhite";
 
 import CloseIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
-import { useState } from "react";
-import axios from "axios";
 
 export default function OfferCard({
   offer,
   handleOpenEditOffer,
-  handleLoadOffers,
-  toast
+  loading,
+  handleDeleteOffer,
+  handleActivateOffer
 }: {
   offer: Object;
   handleOpenEditOffer: Function;
-  handleLoadOffers: Function;
-  toast: Function;
+  loading: boolean;
+  handleDeleteOffer: (offer: string) => Promise<void>;
+  handleActivateOffer: (offer: object) => Promise<void>;
 }) {
-  const [loading, setLoading] = useState(false);
-
-  const handleActivateOffer = async () => {
-    try {
-      setLoading(true);
-
-      await axios.put("http://127.0.0.1:5000/activate-offer", {
-        activation: offer?.IS_ACTIVE ? 0 : 1,
-        id: offer?.ID
-      });
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleDeleteOffer = async () => {
-    try {
-      setLoading(true);
-
-      await axios.delete(`http://127.0.0.1:5000/offer/${offer?.ID}`);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      toast("Offer deleted successfully !.", {
-        icon: "✅"
-      });
-      handleLoadOffers();
-      setLoading(false);
-    }
-  };
-
   return (
-    <Card sx={{ maxWidth: 360 }}>
+    <Card
+      sx={{
+        maxWidth: 360,
+        border: "0.2px solid #bfbfbf",
+        borderRadius: "10px"
+      }}
+    >
+      <Box m={1} display="flex" justifyContent="flex-end">
+        <Chip
+          label={offer?.IS_ACTIVE ? "Active" : "Inactive"}
+          color={offer?.IS_ACTIVE ? "success" : "default"}
+          size="small"
+        />
+      </Box>
       <CardHeader
         title={offer?.NAME}
         subheader={`Valid till : ${new Date(
           offer?.ENDING_DATE
         ).toDateString()}`}
+        style={{
+          fontSize: "15px"
+        }}
       />
-      <CardMedia
-        component="img"
-        height="194"
-        image={offer?.THUMBNAIL}
-        alt="Paella dish"
-      />
+
+      {offer?.THUMBNAIL && (
+        <CardMedia
+          component="img"
+          height="194"
+          image={offer?.THUMBNAIL}
+          alt={`${offer?.NAME} - image`}
+          style={{ maxHeight: "300px" }}
+        />
+      )}
+
       <CardContent>
         <Typography variant="body2" color="text.secondary">
+          <strong>Offer Details - </strong>
+
           {offer?.DESCRIPTION}
         </Typography>
       </CardContent>
@@ -92,7 +82,7 @@ export default function OfferCard({
             variant="outlined"
             color="error"
             startIcon={<DeleteIcon />}
-            onClick={handleDeleteOffer}
+            onClick={() => handleDeleteOffer(offer?.ID)}
             disabled={loading}
           >
             Delete
@@ -100,11 +90,12 @@ export default function OfferCard({
         </Box>
         <Box mr={2}>
           <Button
-            variant="outlined"
+            variant={offer?.IS_ACTIVE ? "outlined" : "contained"}
             startIcon={
               offer?.IS_ACTIVE ? <CloseIcon /> : <PlayCircleFilledWhiteIcon />
             }
-            onClick={handleActivateOffer}
+            color={offer?.IS_ACTIVE ? "inherit" : "success"}
+            onClick={() => handleActivateOffer(offer)}
             disabled={loading}
           >
             {offer?.IS_ACTIVE ? "End" : "Start"}

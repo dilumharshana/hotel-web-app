@@ -11,16 +11,62 @@ export const Offers = () => {
   const [offersLoading, setOffersLoading] = useState(true);
   const [offers, setOffers] = useState([]);
   const [open, setOpen] = useState(false);
-  const [selectedOffer, setSelectedOffer] = useState(null);
+  const [selectedOffer, setSelectedOffer] = useState<Object | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    handleLoadOffers();
+  }, []);
+
+  const handleActivateOffer = async (offer: object) => {
+    try {
+      setLoading(true);
+
+      await axios
+        .put("http://127.0.0.1:5000/activate-offer", {
+          activation: offer?.IS_ACTIVE ? 0 : 1,
+          id: offer?.ID
+        })
+        .then((res) => {
+          const updatedOffers = offers.map((selectedOffer) => {
+            if (selectedOffer?.ID == offer?.ID) {
+              return { ...selectedOffer, IS_ACTIVE: offer?.IS_ACTIVE ? 0 : 1 };
+            }
+            return selectedOffer;
+          });
+
+          console.log("updatedOffers =>", updatedOffers);
+
+          setOffers(updatedOffers);
+        });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteOffer = async (offerId: string) => {
+    try {
+      setLoading(true);
+
+      await axios.delete(`http://127.0.0.1:5000/offer/${offerId}`);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      toast("Offer deleted successfully !.", {
+        icon: "✅"
+      });
+      handleLoadOffers();
+      setLoading(false);
+    }
+  };
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
     setOpen(false);
     setSelectedOffer(null);
   };
-
-  useEffect(() => {
-    handleLoadOffers();
-  }, []);
 
   const handleLoadOffers = async () => {
     try {
@@ -90,8 +136,9 @@ export const Offers = () => {
                   <OfferCard
                     offer={offer}
                     handleOpenEditOffer={handleOpenEditOffer}
-                    handleLoadOffers={handleLoadOffers}
-                    toast={toast}
+                    handleActivateOffer={handleActivateOffer}
+                    handleDeleteOffer={handleDeleteOffer}
+                    loading={loading}
                   />
                 </Grid>
               ))}
