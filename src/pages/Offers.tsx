@@ -28,7 +28,7 @@ export const Offers = () => {
           id: offer?.ID
         })
         .then((res) => {
-          const updatedOffers = offers.map((selectedOffer) => {
+          const updatedOffers = offers.map((selectedOffer: object) => {
             if (selectedOffer?.ID == offer?.ID) {
               return { ...selectedOffer, IS_ACTIVE: offer?.IS_ACTIVE ? 0 : 1 };
             }
@@ -87,6 +87,8 @@ export const Offers = () => {
 
   return (
     <>
+      {/* <h1 className="admin-panel-tab-heading">Hotel Offers</h1> */}
+
       <Toaster />
 
       {offersLoading && (
@@ -139,6 +141,7 @@ export const Offers = () => {
                     handleActivateOffer={handleActivateOffer}
                     handleDeleteOffer={handleDeleteOffer}
                     loading={loading}
+                    fullWidth={false}
                   />
                 </Grid>
               ))}

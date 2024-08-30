@@ -3,7 +3,7 @@ import axios from "axios";
 import * as Yup from "yup";
 import { OfferAndServiceModal } from "./OfferAndServiceModal";
 
-export const OffersModal = ({
+export const ServiceModal = ({
   open = false,
   handleClose = () => {},
   mode = "create",
@@ -23,10 +23,6 @@ export const OffersModal = ({
     description: Yup.string().required("Description is required")
   });
 
-  const selectedDate = data?.ENDING_DATE
-    ? new Date(data?.ENDING_DATE).toLocaleDateString()
-    : new Date().toLocaleDateString();
-
   let isActive = true;
 
   if (data) {
@@ -36,9 +32,7 @@ export const OffersModal = ({
   const initialValues = {
     name: data?.NAME ?? "",
     description: data?.DESCRIPTION ?? "",
-    isActive: isActive,
-    thumbnailUrl: data?.THUMBNAIL ?? "",
-    endingDate: selectedDate
+    isActive: isActive
   };
 
   const handleSubmit = async (
@@ -53,20 +47,19 @@ export const OffersModal = ({
 
       const payload = {
         ...values,
-        isActive: values.isActive === true ? 1 : 0,
-        endingDate: new Date(values.endingDate).toLocaleDateString("en-CA")
+        isActive: values.isActive === true ? 1 : 0
       };
 
       if (mode == "create") {
-        response = await axios.post("http://127.0.0.1:5000/offer", payload);
+        response = await axios.post("http://127.0.0.1:5000/service", payload);
       } else {
-        response = await axios.put("http://127.0.0.1:5000/offer", {
+        response = await axios.put("http://127.0.0.1:5000/service", {
           ...payload,
           id: data?.ID
         });
       }
 
-      if (response.data.offerId) {
+      if (response.data.serviceId) {
         toast("Offer created successfully !.", {
           icon: "✅"
         });
@@ -91,9 +84,9 @@ export const OffersModal = ({
       initialValues={initialValues}
       validationSchema={validationSchema}
       handleSubmit={handleSubmit}
-      selectedDate={selectedDate}
+      selectedDate={null}
       isActive={isActive}
-      modalType="offers"
+      modalType="services"
     />
   );
 };

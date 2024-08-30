@@ -16,20 +16,24 @@ export default function OfferCard({
   handleOpenEditOffer,
   loading,
   handleDeleteOffer,
-  handleActivateOffer
+  handleActivateOffer,
+  fullWidth = false
 }: {
   offer: Object;
   handleOpenEditOffer: Function;
   loading: boolean;
   handleDeleteOffer: (offer: string) => Promise<void>;
   handleActivateOffer: (offer: object) => Promise<void>;
+  fullWidth: true | false;
 }) {
   return (
     <Card
       sx={{
-        maxWidth: 360,
-        border: "0.2px solid #bfbfbf",
-        borderRadius: "10px"
+        maxWidth: fullWidth ? "auto" : 360,
+        borderRadius: "10px",
+        minWidth: fullWidth ? "100%" : "",
+        paddingBottom: "10px",
+        marginBottom: "20px"
       }}
     >
       <Box m={1} display="flex" justifyContent="flex-end">
@@ -41,11 +45,14 @@ export default function OfferCard({
       </Box>
       <CardHeader
         title={offer?.NAME}
-        subheader={`Valid till : ${new Date(
+        subheader={
           offer?.ENDING_DATE
-        ).toDateString()}`}
+            ? `Valid till : ${new Date(offer?.ENDING_DATE).toDateString()}`
+            : ""
+        }
         style={{
-          fontSize: "15px"
+          fontSize: "15px",
+          color: "green"
         }}
       />
 
@@ -67,39 +74,41 @@ export default function OfferCard({
         </Typography>
       </CardContent>
       <CardActions>
-        <Box mr={2}>
-          <Button
-            variant="outlined"
-            color="success"
-            startIcon={<EditIcon />}
-            onClick={() => handleOpenEditOffer(offer)}
-          >
-            Edit
-          </Button>
-        </Box>
-        <Box mr={2}>
-          <Button
-            variant="outlined"
-            color="error"
-            startIcon={<DeleteIcon />}
-            onClick={() => handleDeleteOffer(offer?.ID)}
-            disabled={loading}
-          >
-            Delete
-          </Button>
-        </Box>
-        <Box mr={2}>
-          <Button
-            variant={offer?.IS_ACTIVE ? "outlined" : "contained"}
-            startIcon={
-              offer?.IS_ACTIVE ? <CloseIcon /> : <PlayCircleFilledWhiteIcon />
-            }
-            color={offer?.IS_ACTIVE ? "inherit" : "success"}
-            onClick={() => handleActivateOffer(offer)}
-            disabled={loading}
-          >
-            {offer?.IS_ACTIVE ? "End" : "Start"}
-          </Button>
+        <Box display="flex" justifyContent="flex-end" style={{ width: "100%" }}>
+          <Box mr={2}>
+            <Button
+              variant="outlined"
+              color="success"
+              startIcon={<EditIcon />}
+              onClick={() => handleOpenEditOffer(offer)}
+            >
+              Edit
+            </Button>
+          </Box>
+          <Box mr={2}>
+            <Button
+              variant="outlined"
+              color="error"
+              startIcon={<DeleteIcon />}
+              onClick={() => handleDeleteOffer(offer?.ID)}
+              disabled={loading}
+            >
+              Delete
+            </Button>
+          </Box>
+          <Box mr={2}>
+            <Button
+              variant={offer?.IS_ACTIVE ? "outlined" : "contained"}
+              startIcon={
+                offer?.IS_ACTIVE ? <CloseIcon /> : <PlayCircleFilledWhiteIcon />
+              }
+              color={offer?.IS_ACTIVE ? "inherit" : "success"}
+              onClick={() => handleActivateOffer(offer)}
+              disabled={loading}
+            >
+              {offer?.IS_ACTIVE ? "End" : "Start"}
+            </Button>
+          </Box>
         </Box>
       </CardActions>
     </Card>
