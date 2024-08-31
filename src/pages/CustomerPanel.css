@@ -1,0 +1,125 @@
+:root {
+  --primary-color: #1976d2;
+  --primary-light: #63a4ff;
+  --primary-dark: #004ba0;
+  --text-primary: #333333;
+  --text-secondary: #666666;
+  --rooms-color: #4caf50;
+  --halls-color: #ff9800;
+  --background-color: #f4f4f4;
+}
+
+body {
+  font-family: "Roboto", sans-serif;
+  color: var(--text-primary);
+  background-color: var(--background-color);
+}
+
+.customer-panel {
+  padding: 20px 0;
+}
+
+.main-content {
+  display: flex;
+  gap: 20px;
+}
+
+.left-content {
+  flex: 1;
+}
+
+.availability-tiles {
+  margin-bottom: 30px;
+}
+
+.availability-card {
+  text-align: center;
+  background-color: white;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.availability-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+.availability-icon {
+  font-size: 48px;
+  margin-bottom: 10px;
+}
+
+.rooms-card .availability-icon {
+  color: var(--rooms-color);
+}
+
+.halls-card .availability-icon {
+  color: var(--halls-color);
+}
+
+.rooms-card {
+  background: linear-gradient(135deg, #e8f5e9 0%, #ffffff 100%);
+}
+
+.halls-card {
+  background: linear-gradient(135deg, #fff3e0 0%, #ffffff 100%);
+}
+
+.availability-card h6 {
+  margin-bottom: 10px;
+}
+
+.availability-card h3 {
+  font-size: 36px;
+  font-weight: bold;
+}
+
+.section-title {
+  margin: 40px 0 20px;
+  position: relative;
+  padding-bottom: 10px;
+  color: var(--primary-color);
+  display: flex;
+  align-items: center;
+}
+
+.section-title::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 50px;
+  height: 3px;
+  background-color: var(--primary-color);
+}
+
+.section-icon {
+  margin-right: 10px;
+}
+
+.offers-services-container {
+  margin-bottom: 30px;
+}
+
+.offer-card,
+.service-card {
+  height: 100%;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.offer-card:hover,
+.service-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+.inquiry-form {
+  padding: 20px;
+}
+
+.customer-panel-service-card {
+  color: #e8f5e9;
+  background: #4caf50;
+  cursor: pointer;
+}

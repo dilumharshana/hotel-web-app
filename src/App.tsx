@@ -5,6 +5,7 @@ import { Offers } from "./pages/Offers";
 import CustomerSignUp from "./pages/CustomerSignUp";
 import AdminDashboard from "./pages/AdminDashboard";
 import Navbar from "./components/NavBar";
+import CustomerPanel from "./pages/CustomerPanel";
 
 export default function App() {
   const router = createBrowserRouter([
@@ -27,6 +28,10 @@ export default function App() {
     {
       path: "/admin",
       element: <AdminDashboard />
+    },
+    {
+      path: "/home",
+      element: <CustomerPanel services={[]} offers={[]} />
     }
   ]);
 

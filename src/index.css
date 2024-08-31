@@ -121,7 +121,7 @@
 }
 
 .gray-color-font {
-  color: gray;
+  color: gray !;
 }
 
 .full-screen-parent-box {
