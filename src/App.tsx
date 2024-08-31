@@ -6,6 +6,7 @@ import CustomerSignUp from "./pages/CustomerSignUp";
 import AdminDashboard from "./pages/AdminDashboard";
 import Navbar from "./components/NavBar";
 import CustomerPanel from "./pages/CustomerPanel";
+import { Reservations } from "./components/Reservations";
 
 export default function App() {
   const router = createBrowserRouter([
@@ -32,6 +33,10 @@ export default function App() {
     {
       path: "/home",
       element: <CustomerPanel services={[]} offers={[]} />
+    },
+    {
+      path: "/reservations",
+      element: <Reservations services={[]} offers={[]} />
     }
   ]);
 

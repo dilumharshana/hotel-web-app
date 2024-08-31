@@ -1,30 +1,28 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { Formik, Form, Field } from "formik";
-import * as Yup from "yup";
 import HotelIcon from "@mui/icons-material/Hotel";
-import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
+import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
 import RoomServiceIcon from "@mui/icons-material/RoomService";
 import {
   Button,
   Card,
   CardContent,
+  CardMedia,
+  CircularProgress,
   Container,
   Grid,
   Paper,
   TextField,
-  Typography,
-  CircularProgress,
-  Modal,
-  Box,
-  IconButton,
-  CardMedia
+  Typography
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import axios from "axios";
+import { Field, Form, Formik } from "formik";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import * as Yup from "yup";
 import "./CustomerPanel.css";
 
-const StyledPaper = styled(Paper)(({ theme }) => ({
+export const StyledPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(3),
   margin: theme.spacing(2, 0),
   backgroundColor: "#f8f8f8",
@@ -36,7 +34,7 @@ const CustomerPanel = ({ availableRooms = 0, availableBanquetHalls = 0 }) => {
   const [offers, setOffers] = useState([]);
   const [services, setServices] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isReservationModalOpen, setIsReservationModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchData();
@@ -57,12 +55,8 @@ const CustomerPanel = ({ availableRooms = 0, availableBanquetHalls = 0 }) => {
     }
   };
 
-  const handleOpenReservationModal = () => {
-    setIsReservationModalOpen(true);
-  };
-
-  const handleCloseReservationModal = () => {
-    setIsReservationModalOpen(false);
+  const handleReservations = () => {
+    navigate("/reservations");
   };
 
   const validationSchema = Yup.object().shape({
@@ -71,31 +65,11 @@ const CustomerPanel = ({ availableRooms = 0, availableBanquetHalls = 0 }) => {
     message: Yup.string().required("Message is required")
   });
 
-  const reservationValidationSchema = Yup.object().shape({
-    name: Yup.string().required("Name is required"),
-    email: Yup.string().email("Invalid email").required("Email is required"),
-    checkIn: Yup.date().required("Check-in date is required"),
-    checkOut: Yup.date()
-      .required("Check-out date is required")
-      .min(Yup.ref("checkIn"), "Check-out date must be after check-in date"),
-    guests: Yup.number()
-      .required("Number of guests is required")
-      .min(1, "At least 1 guest is required")
-  });
-
   const handleInquirySubmit = (values, { setSubmitting, resetForm }) => {
     // Handle form submission here
     console.log(values);
     setSubmitting(false);
     resetForm();
-  };
-
-  const handleReservationSubmit = (values, { setSubmitting, resetForm }) => {
-    // Handle reservation submission here
-    console.log(values);
-    setSubmitting(false);
-    resetForm();
-    handleCloseReservationModal();
   };
 
   if (isLoading) {
@@ -152,7 +126,7 @@ const CustomerPanel = ({ availableRooms = 0, availableBanquetHalls = 0 }) => {
                         color="primary"
                         size="large"
                         className="reservation-button"
-                        onClick={handleOpenReservationModal}
+                        onClick={handleReservations}
                       >
                         Make a Reservation
                       </Button>
@@ -284,100 +258,6 @@ const CustomerPanel = ({ availableRooms = 0, availableBanquetHalls = 0 }) => {
           </Paper>
         </Grid>
       </Grid>
-
-      <Modal
-        open={isReservationModalOpen}
-        onClose={handleCloseReservationModal}
-        aria-labelledby="reservation-modal-title"
-      >
-        <Box className="reservation-modal">
-          <Typography id="reservation-modal-title" variant="h6" component="h2">
-            Make a Reservation
-          </Typography>
-          <Formik
-            initialValues={{
-              name: "",
-              email: "",
-              checkIn: "",
-              checkOut: "",
-              guests: 1
-            }}
-            validationSchema={reservationValidationSchema}
-            onSubmit={handleReservationSubmit}
-          >
-            {({ errors, touched, isSubmitting }) => (
-              <Form>
-                <Field
-                  as={TextField}
-                  fullWidth
-                  label="Name"
-                  name="name"
-                  error={touched.name && errors.name}
-                  helperText={touched.name && errors.name}
-                  margin="normal"
-                  variant="outlined"
-                />
-                <Field
-                  as={TextField}
-                  fullWidth
-                  label="Email"
-                  name="email"
-                  type="email"
-                  error={touched.email && errors.email}
-                  helperText={touched.email && errors.email}
-                  margin="normal"
-                  variant="outlined"
-                />
-                <Field
-                  as={TextField}
-                  fullWidth
-                  label="Check-in Date"
-                  name="checkIn"
-                  type="date"
-                  InputLabelProps={{ shrink: true }}
-                  error={touched.checkIn && errors.checkIn}
-                  helperText={touched.checkIn && errors.checkIn}
-                  margin="normal"
-                  variant="outlined"
-                />
-                <Field
-                  as={TextField}
-                  fullWidth
-                  label="Check-out Date"
-                  name="checkOut"
-                  type="date"
-                  InputLabelProps={{ shrink: true }}
-                  error={touched.checkOut && errors.checkOut}
-                  helperText={touched.checkOut && errors.checkOut}
-                  margin="normal"
-                  variant="outlined"
-                />
-                <Field
-                  as={TextField}
-                  fullWidth
-                  label="Number of Guests"
-                  name="guests"
-                  type="number"
-                  error={touched.guests && errors.guests}
-                  helperText={touched.guests && errors.guests}
-                  margin="normal"
-                  variant="outlined"
-                />
-                <Button
-                  type="submit"
-                  variant="contained"
-                  color="primary"
-                  size="large"
-                  className="submit-button"
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? "Submitting..." : "Submit Reservation"}
-                </Button>
-              </Form>
-            )}
-          </Formik>
-        </Box>
-      </Modal>
     </Container>
   );
 };

@@ -1,4 +1,3 @@
-import MenuIcon from "@mui/icons-material/Menu";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
@@ -7,7 +6,7 @@ import Typography from "@mui/material/Typography";
 
 export default function Navbar({ title = "" }) {
   return (
-    <Box sx={{ flexGrow: 1 }} mb={5}>
+    <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar variant="dense">
           <IconButton
