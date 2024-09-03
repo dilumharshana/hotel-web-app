@@ -20,7 +20,6 @@ import { Field, Form, Formik } from "formik";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
-import "./CustomerPanel.css";
 
 export const StyledPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(3),
