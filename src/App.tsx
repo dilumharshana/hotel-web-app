@@ -1,4 +1,10 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import React from "react";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Navigate,
+  Outlet
+} from "react-router-dom";
 import "./App.css";
 import Login from "./pages/Login";
 import { Offers } from "./pages/Offers";
@@ -9,15 +15,24 @@ import CustomerPanel from "./pages/CustomerPanel";
 import { Reservations } from "./components/Reservations";
 import HomeLanding from "./pages/HomeLanding";
 
+// Simulated authentication check
+const isAuthenticated = () => {
+  // Replace this with your actual authentication logic
+  return localStorage.getItem("customer_data") !== null;
+};
+
+const ProtectedRoute = () => {
+  if (!isAuthenticated()) {
+    return <Navigate to="/login" replace />;
+  }
+  return <Outlet />;
+};
+
 export default function App() {
   const router = createBrowserRouter([
     {
       path: "/",
       element: <HomeLanding />
-    },
-    {
-      path: "/offers",
-      element: <Offers />
     },
     {
       path: "/login",
@@ -28,22 +43,27 @@ export default function App() {
       element: <CustomerSignUp />
     },
     {
-      path: "/admin",
-      element: <AdminDashboard />
-    },
-    {
-      path: "/home",
-      element: <CustomerPanel services={[]} offers={[]} />
-    },
-    {
-      path: "/reservations",
-      element: <Reservations services={[]} offers={[]} />
+      element: <ProtectedRoute />,
+      children: [
+        {
+          path: "/admin",
+          element: <AdminDashboard />
+        },
+        {
+          path: "/home",
+          element: <CustomerPanel services={[]} offers={[]} />
+        },
+        {
+          path: "/reservations",
+          element: <Reservations services={[]} offers={[]} />
+        }
+      ]
     }
   ]);
 
   return (
     <>
-      <Navbar title="Ocen View Hotel" />
+      <Navbar title="Ocean View Hotel" />
       <RouterProvider router={router} />
     </>
   );

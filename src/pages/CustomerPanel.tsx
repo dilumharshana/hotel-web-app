@@ -89,6 +89,11 @@ const CustomerPanel = ({ availableRooms = 0, availableBanquetHalls = 0 }) => {
     } catch (error) {}
   };
 
+  const handleLogOut = () => {
+    localStorage.removeItem("customer_data");
+    navigate("/");
+  };
+
   if (isLoading) {
     return (
       <Container maxWidth={false} className="customer-panel">
@@ -104,11 +109,7 @@ const CustomerPanel = ({ availableRooms = 0, availableBanquetHalls = 0 }) => {
     <Container maxWidth={false} className="customer-panel">
       <Toaster />
       <Box display="flex" justifyContent="flex-end">
-        <Button
-          onClick={() => navigate("/")}
-          variant="outlined"
-          color="warning"
-        >
+        <Button onClick={handleLogOut} variant="outlined" color="warning">
           Log out
         </Button>
       </Box>

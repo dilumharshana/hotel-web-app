@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { Grid, Tab, Tabs, Typography, Box } from "@mui/material";
 import { Offers } from "./Offers";
 import { Services } from "./Services";
+import Dashboard from "./Dashboard";
+import { Customers } from "./Customers";
+import { Inquiries } from "./Inquiries";
 
 // Tab panel component
 function TabPanel(props: any) {
@@ -44,20 +47,20 @@ const AdminDashboard = () => {
             aria-label="Vertical tabs example"
             className="vertical-tabs"
           >
+            <Tab label="Dashboard" />
             <Tab label="Customers" />
-            <Tab label="Users" />
             <Tab label="Offers" />
             <Tab label="Services" />
             <Tab label="Rooms" />
-            <Tab label="Menu" />
+            <Tab label="Inquires" />
           </Tabs>
         </Grid>
         <Grid item className="right-panel">
           <TabPanel value={value} index={0}>
-            Customers Content
+            <Dashboard />
           </TabPanel>
           <TabPanel value={value} index={1}>
-            Users Content
+            <Customers />
           </TabPanel>
           <TabPanel value={value} index={2} className="full-screen-parent-box">
             <Offers />
@@ -65,11 +68,11 @@ const AdminDashboard = () => {
           <TabPanel value={value} index={3}>
             <Services />
           </TabPanel>
-          <TabPanel value={value} index={4}>
+          <TabPanel value={value} index={4} disabled>
             Rooms Content
           </TabPanel>
           <TabPanel value={value} index={5}>
-            Menu Content
+            <Inquiries />
           </TabPanel>
         </Grid>
       </Grid>

@@ -508,3 +508,60 @@ body {
 .card-cta-button:hover {
   background-color: #3a7bd5;
 }
+
+.admin-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 2rem;
+}
+
+.dashboard-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.dashboard-card {
+  background-color: #fff;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+  padding: 1.5rem;
+  transition: transform 0.3s ease-in-out;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-5px);
+}
+
+.dashboard-card .MuiTypography-h5 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #4a4a4a;
+  font-weight: 600;
+}
+
+.dashboard-card .MuiTypography-h3 {
+  color: #2196f3;
+  font-weight: 700;
+  margin-top: 1rem;
+}
+
+.dashboard-chart {
+  background-color: #fff;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+  padding: 1.5rem;
+}
+
+.dashboard-chart .MuiTypography-h5 {
+  color: #4a4a4a;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.recharts-wrapper {
+  width: 100% !important;
+  height: 300px !important;
+}

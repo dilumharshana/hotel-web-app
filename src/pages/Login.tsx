@@ -51,18 +51,20 @@ export default function Login() {
         email,
         password
       });
+      console.log(response.data.user_type === "admin");
 
       if (response.data.success) {
+        localStorage.setItem(
+          "customer_data",
+          JSON.stringify({
+            customer_id: response.data.customer_id,
+            customer_name: response.data.customer_name
+          })
+        );
+
         if (response.data.user_type === "admin") {
           navigate("/admin");
         } else {
-          localStorage.setItem(
-            "customer_data",
-            JSON.stringify({
-              customer_id: response.data.customer_id,
-              customer_name: response.data.customer_name
-            })
-          );
           navigate("/home");
         }
       }
