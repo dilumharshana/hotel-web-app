@@ -3,6 +3,7 @@ import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
 import RoomServiceIcon from "@mui/icons-material/RoomService";
 import {
+  Box,
   Button,
   Card,
   CardContent,
@@ -20,6 +21,8 @@ import { Field, Form, Formik } from "formik";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
+import { mainRoute } from "../config";
+import toast, { Toaster } from "react-hot-toast";
 
 export const StyledPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(3),
@@ -34,6 +37,12 @@ const CustomerPanel = ({ availableRooms = 0, availableBanquetHalls = 0 }) => {
   const [services, setServices] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
+
+  let customerData = localStorage.getItem("customer_data") || null;
+
+  if (customerData) {
+    customerData = JSON.parse(customerData);
+  }
 
   useEffect(() => {
     fetchData();
@@ -59,16 +68,25 @@ const CustomerPanel = ({ availableRooms = 0, availableBanquetHalls = 0 }) => {
   };
 
   const validationSchema = Yup.object().shape({
-    name: Yup.string().required("Name is required"),
-    email: Yup.string().email("Invalid email").required("Email is required"),
+    contactNumber: Yup.number().required("Contact number is required"),
     message: Yup.string().required("Message is required")
   });
 
-  const handleInquirySubmit = (values, { setSubmitting, resetForm }) => {
-    // Handle form submission here
-    console.log(values);
-    setSubmitting(false);
-    resetForm();
+  const handleInquirySubmit = async (values, { setSubmitting, resetForm }) => {
+    try {
+      const response = await axios.post(`${mainRoute}inquiry`, {
+        customer_id: customerData?.customer_id,
+        message: values.message,
+        contactNumber: values.contactNumber
+      });
+
+      if (response?.data?.inquiryId) {
+        resetForm();
+        toast("Inquiry submitted successfully !.", {
+          icon: "✅"
+        });
+      }
+    } catch (error) {}
   };
 
   if (isLoading) {
@@ -84,6 +102,16 @@ const CustomerPanel = ({ availableRooms = 0, availableBanquetHalls = 0 }) => {
 
   return (
     <Container maxWidth={false} className="customer-panel">
+      <Toaster />
+      <Box display="flex" justifyContent="flex-end">
+        <Button
+          onClick={() => navigate("/")}
+          variant="outlined"
+          color="warning"
+        >
+          Log out
+        </Button>
+      </Box>
       <div className="main-content">
         <div className="left-content">
           {/* Carousel code remains the same */}
@@ -202,7 +230,7 @@ const CustomerPanel = ({ availableRooms = 0, availableBanquetHalls = 0 }) => {
               Have a question? Send us an inquiry
             </Typography>
             <Formik
-              initialValues={{ name: "", email: "", message: "" }}
+              initialValues={{ contactNumber: "", message: "" }}
               validationSchema={validationSchema}
               onSubmit={handleInquirySubmit}
             >
@@ -211,21 +239,11 @@ const CustomerPanel = ({ availableRooms = 0, availableBanquetHalls = 0 }) => {
                   <Field
                     as={TextField}
                     fullWidth
-                    label="Name"
-                    name="name"
-                    error={touched.name && errors.name}
-                    helperText={touched.name && errors.name}
-                    margin="normal"
-                    variant="outlined"
-                  />
-                  <Field
-                    as={TextField}
-                    fullWidth
-                    label="Email"
-                    name="email"
-                    type="email"
-                    error={touched.email && errors.email}
-                    helperText={touched.email && errors.email}
+                    label="Contact number"
+                    name="contactNumber"
+                    type="contactNumber"
+                    error={touched.contactNumber && errors.contactNumber}
+                    helperText={touched.contactNumber && errors.contactNumber}
                     margin="normal"
                     variant="outlined"
                   />

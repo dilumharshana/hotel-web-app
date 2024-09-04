@@ -7,12 +7,13 @@ import AdminDashboard from "./pages/AdminDashboard";
 import Navbar from "./components/NavBar";
 import CustomerPanel from "./pages/CustomerPanel";
 import { Reservations } from "./components/Reservations";
+import HomeLanding from "./pages/HomeLanding";
 
 export default function App() {
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <div>Hello world!</div>
+      element: <HomeLanding />
     },
     {
       path: "/offers",
