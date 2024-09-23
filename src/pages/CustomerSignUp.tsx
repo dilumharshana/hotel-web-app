@@ -72,7 +72,7 @@ const RegistrationForm: React.FC = () => {
   return (
     <Grid container className="registration-container">
       <Grid item xs={12} md={6} className="banner-panel">
-        <Typography variant="h2">Ocean View</Typography>
+        <Typography variant="h2">Sign Up for free</Typography>
       </Grid>
       <Grid item xs={12} md={6} className="form-panel">
         {!customerCreated && (

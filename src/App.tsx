@@ -63,7 +63,7 @@ export default function App() {
 
   return (
     <>
-      <Navbar title="Ocean View Hotel" />
+      <Navbar title="ABC Restaurant" />
       <RouterProvider router={router} />
     </>
   );

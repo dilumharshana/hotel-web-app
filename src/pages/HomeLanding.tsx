@@ -121,7 +121,7 @@ const HomeLanding = () => {
     <div className="landing-page">
       <header className="hero-section">
         <div className="header-content">
-          <h1>Ocean View Hotel</h1>
+          <h1>ABC Restaurant</h1>
           <p>Experience luxury by the sea</p>
         </div>
         <nav className="nav-buttons">
@@ -235,8 +235,8 @@ const HomeLanding = () => {
                   Luxurious Rooms
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  Experience comfort and elegance in our spacious rooms with
-                  ocean views.
+                  Experience comfort and elegance in our spacious rooms with ABC
+                  Restaurants.
                 </Typography>
               </CardContent>
             </Card>

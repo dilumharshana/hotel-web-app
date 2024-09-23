@@ -113,10 +113,10 @@ const CustomerPanel = ({ availableRooms = 0, availableBanquetHalls = 0 }) => {
           Log out
         </Button>
       </Box>
+      <h1 style={{ fontSize: "25px" }}>Welcome back, Jhon 🎉</h1>
       <div className="main-content">
         <div className="left-content">
           {/* Carousel code remains the same */}
-
           <StyledPaper className="availability-tiles">
             <Grid container spacing={3}>
               <Grid item xs={12} sm={6} lg={4}>
@@ -127,7 +127,7 @@ const CustomerPanel = ({ availableRooms = 0, availableBanquetHalls = 0 }) => {
                       Available Rooms
                     </Typography>
                     <Typography variant="h3" color="textPrimary">
-                      {availableRooms}
+                      24
                     </Typography>
                   </CardContent>
                 </Card>
@@ -140,7 +140,7 @@ const CustomerPanel = ({ availableRooms = 0, availableBanquetHalls = 0 }) => {
                       Available Banquet Halls
                     </Typography>
                     <Typography variant="h3" color="textPrimary">
-                      {availableBanquetHalls}
+                      3
                     </Typography>
                   </CardContent>
                 </Card>

@@ -34,35 +34,22 @@ const AdminDashboard = () => {
 
   const fetchData = async () => {
     try {
-      const [
-        offersResponse,
-        servicesResponse,
-        inquiriesResponse,
-        reservationsResponse,
-        customersResponse
-      ] = await Promise.all([
-        axios.get("http://127.0.0.1:5000/offers"),
-        axios.get("http://127.0.0.1:5000/services"),
-        axios.get("http://127.0.0.1:5000/inquiry"),
-        axios.get("http://127.0.0.1:5000/reservation"),
-        axios.get("http://127.0.0.1:5000/customer")
-      ]);
-      setOffers(offersResponse.data.offers);
-      setServices(servicesResponse.data.services);
-      setInquiries(inquiriesResponse.data.inquiries);
-      setReservations(reservationsResponse.data.reservations);
-      setCustomers(customersResponse.data.customers);
+
+      const response = await axios.get("http://127.0.0.1:5000/dashboard");
+
+      console.log("response =>", response);
+
+      setOffers(response.data.offerCount);
+      setServices(response.data.serviceCount);
+      setInquiries(response.data.inquiryCount);
+      setReservations(response.data.reservationCount);
+      setCustomers(response.data.customerCount);
       setIsLoading(false);
     } catch (error) {
       console.error("Error fetching data:", error);
       setIsLoading(false);
     }
   };
-
-  console.log(offers?.length);
-  console.log(services?.length);
-  console.log(inquiries?.length);
-  console.log(customers?.length);
 
   const reservationData = reservations.map((reservation) => ({
     name: reservation.created_at,
@@ -99,13 +86,18 @@ const AdminDashboard = () => {
     return <div>Loading...</div>;
   }
 
+  const email = () => {
+    axios.post('http://127.0.0.1:5000/email')
+  }
+
   return (
     <div className="admin-dashboard">
+      <button onClick={email}>email</button>
       <div className="dashboard-cards">
         <Card className="dashboard-card">
           <CardContent>
             <Typography variant="h5" component="h2">
-              <LocalOffer /> Active Offers
+              <LocalOffer /> Offers
             </Typography>
             <Typography variant="h3">{offers.length}</Typography>
           </CardContent>
@@ -114,7 +106,7 @@ const AdminDashboard = () => {
         <Card className="dashboard-card">
           <CardContent>
             <Typography variant="h5" component="h2">
-              <Inventory /> Active Services
+              <Inventory /> Services
             </Typography>
             <Typography variant="h3">{services.length}</Typography>
           </CardContent>
