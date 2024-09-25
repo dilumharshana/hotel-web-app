@@ -76,14 +76,26 @@ export const Reservations = () => {
         reservation_type: "room"
       });
 
-      if (response?.data?.room_number) {
-        toast(
-          `Room Booked successfully !. Your ROOM NUMBER : ${response?.data?.room_number}`,
-          {
-            icon: "✅",
-            duration: 10000
-          }
-        );
+
+      const isSuccess = response?.data?.room_number
+
+      if (isSuccess) toast(
+        `Room Booked successfully !. Your ROOM NUMBER : ${response?.data?.room_number}`,
+        {
+          icon: "✅",
+          duration: 10000
+        }
+      );
+
+      if (!isSuccess) toast(
+        response?.data?.error,
+        {
+          icon: "📕",
+          duration: 10000
+        }
+      );
+
+      if (isSuccess) {
         resetForm();
       }
       console.log("response =>", response);
@@ -116,12 +128,12 @@ export const Reservations = () => {
             onClick={() => handleReservationTypeChange(RESERVATION_TYPES.ROOMS)}
           >
             <Card
-              className={`availability-card rooms-card ${
-                reservationType === RESERVATION_TYPES.ROOMS
-                  ? "selected-reservation"
-                  : ""
-              }`}
+              className={`availability-card rooms-card ${reservationType === RESERVATION_TYPES.ROOMS
+                ? "selected-reservation"
+                : ""
+                }`}
               elevation={3}
+              style={{ cursor: "pointer" }}
             >
               <CardContent>
                 <HotelIcon className="availability-icon" />
@@ -140,14 +152,13 @@ export const Reservations = () => {
             }
           >
             <Card
-              className={`availability-card halls-card ${
-                reservationType === RESERVATION_TYPES.BANQUET_HALLS
-                  ? "selected-reservation"
-                  : ""
-              }`}
+              className={`availability-card halls-card ${reservationType === RESERVATION_TYPES.BANQUET_HALLS
+                ? "selected-reservation"
+                : ""
+                }`}
               elevation={3}
             >
-              <CardContent>
+              <CardContent style={{ cursor: "not-allowed" }}>
                 <MeetingRoomIcon className="availability-icon" />
                 <Typography variant="h6" color="primary">
                   Banquet Halls
@@ -200,6 +211,11 @@ export const Reservations = () => {
                 name="check_in_date"
                 type="date"
                 InputLabelProps={{ shrink: true }}
+                InputProps={{
+                  inputProps: {
+                    min: new Date().toISOString().split("T")[0], // Disable past dates
+                  },
+                }}
                 error={touched.check_in_date && errors.check_in_date}
                 helperText={touched.check_in_date && errors.check_in_date}
                 margin="normal"
@@ -212,6 +228,11 @@ export const Reservations = () => {
                 name="check_out_date"
                 type="date"
                 InputLabelProps={{ shrink: true }}
+                InputProps={{
+                  inputProps: {
+                    min: new Date().toISOString().split("T")[0], // Disable past dates
+                  },
+                }}
                 error={touched.check_out_date && errors.check_out_date}
                 helperText={touched.check_out_date && errors.check_out_date}
                 margin="normal"
