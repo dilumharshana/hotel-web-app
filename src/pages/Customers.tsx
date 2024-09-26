@@ -104,15 +104,16 @@ export const Customers = () => {
       )}
 
       {!offersLoading && offers?.length > 0 && (
-        <Container>
+        <Container >
           <Grid container direction="row">
             <Grid container direction="row" gap={4}>
               {offers?.map((offer) => (
-                <Grid style={{ width: "100%" }}>
+                <Grid style={{ width: "100%", padding: "30px", border: "1px solid gray", borderRadius: "10px" }}>
                   <CardContent>
+                    <Typography variant="h4" color="text.secondary">
+                      <strong>{offer?.NAME}</strong>
+                    </Typography>
                     <Typography variant="body2" color="text.secondary">
-                      <strong>Name - {offer?.NAME}</strong>
-
                       <p>Email - {offer?.EMAIL}</p>
                       <p>Contact Number - {offer?.CONTACT_NUMBER}</p>
                     </Typography>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Card, CardContent, Typography } from "@mui/material";
+import { Card, CardContent, Typography, Button, Box } from "@mui/material";
 import {
   LineChart,
   Line,
@@ -19,6 +19,7 @@ import {
   QuestionAnswer,
   LocalOffer
 } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
 const AdminDashboard = () => {
   const [offers, setOffers] = useState([]);
@@ -27,6 +28,7 @@ const AdminDashboard = () => {
   const [reservations, setReservations] = useState([]);
   const [customers, setCustomers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchData();
@@ -86,13 +88,17 @@ const AdminDashboard = () => {
     return <div>Loading...</div>;
   }
 
-  const email = () => {
-    axios.post('http://127.0.0.1:5000/email')
-  }
+  const handleLogOut = () => {
+    localStorage.removeItem("customer_data");
+    navigate("/");
+  };
 
   return (
     <div className="admin-dashboard">
-      <button onClick={email}>email</button>
+      <h1 style={{ fontFamily: "Arial", fontSize: "20px" }}>Welcome Back Admin 🎉</h1>
+      <Box display="flex" justifyContent="flex-end" >
+        <Button onClick={handleLogOut} variant="contained" color="warning" style={{ width: "250px" }}>Log out</Button>
+      </Box >
       <div className="dashboard-cards">
         <Card className="dashboard-card">
           <CardContent>
@@ -199,7 +205,7 @@ const AdminDashboard = () => {
           </CardContent>
         </Card>
       </div>
-    </div>
+    </div >
   );
 };
 

@@ -78,8 +78,14 @@ const HomeLanding = () => {
     setSearchResults([...filteredOffers, ...filteredServices]);
   };
 
-  const renderCard = (item: Offer | Service) => (
-    <Card className={`offer-card service-card`} key={item.id}>
+  const renderCard = (item: Offer | Service,) => {
+
+
+    const isServiceItem = item?.THUMBNAIL == "" || item?.THUMBNAIL == null;
+
+    if (item?.IS_ACTIVE == 0) return <></>
+
+    return <Card className={`offer-card service-card`} key={item.id}>
       <div className="card-media-overlay">
         {item.THUMBNAIL && (
           <CardMedia
@@ -93,7 +99,7 @@ const HomeLanding = () => {
           <span className="card-tag">Limited Time Offer</span>
         )}
       </div>
-      <CardContent className="card-content">
+      <CardContent className="card-content" style={{ background: isServiceItem ? "#39bf24" : "#ffd000", color: "#fff" }}>
         <Typography className="card-title" variant="h5" component="h2">
           {item.NAME}
         </Typography>
@@ -115,14 +121,16 @@ const HomeLanding = () => {
         </Button>
       </CardContent>
     </Card>
-  );
+  };
 
   return (
     <div className="landing-page">
       <header className="hero-section">
         <div className="header-content">
           <h1>ABC Restaurant</h1>
-          <p>Experience luxury by the sea</p>
+          <p>Experience the luxury..</p>
+          <br />
+          <p>Kandy - Colombo - Galle - Mount Lavinia</p>
         </div>
         <nav className="nav-buttons">
           <Button
@@ -157,7 +165,7 @@ const HomeLanding = () => {
 
         {searchTerm && (
           <Box sx={{ my: 4 }}>
-            <Typography variant="h4" gutterBottom>
+            <Typography variant="h4" style={{ fontFamily: "Arial" }} gutterBottom>
               Search Results
             </Typography>
             <Box
@@ -178,8 +186,8 @@ const HomeLanding = () => {
         ) : (
           <>
             <Box sx={{ my: 4 }}>
-              <Typography variant="h4" gutterBottom>
-                Special Offers
+              <Typography variant="h4" style={{ fontFamily: "Arial" }} gutterBottom>
+                Explore Our Special Offers
               </Typography>
               <Box
                 sx={{
@@ -193,16 +201,16 @@ const HomeLanding = () => {
               </Box>
             </Box>
 
-            <Box sx={{ my: 4 }}>
-              <Typography variant="h4" gutterBottom>
-                Our Services
+            <Box >
+              <Typography variant="h4" style={{ fontFamily: "Arial" }} gutterBottom>
+                Explore Our Services
               </Typography>
               <Box
                 sx={{
                   display: "flex",
                   overflowX: "auto",
                   p: 1,
-                  "&::-webkit-scrollbar": { display: "none" }
+                  "&::-webkit-scrollbar": { display: "none" },
                 }}
               >
                 {services.map(renderCard)}
@@ -211,12 +219,27 @@ const HomeLanding = () => {
           </>
         )}
 
+        <div style={{ marginTop: "40px" }}>
+          <Typography variant="h4" style={{ fontFamily: "Arial" }} gutterBottom>
+            About our restaurant ...
+          </Typography>
+        </div>
+
+        <div style={{ marginTop: "40px", fontFamily: "arial", color: "#333333", fontSize: "18px", textAlign: "justify" }}>
+          Welcome to ABC Restaurant, where culinary excellence meets unparalleled hospitality. Our restaurant offers an exquisite dining experience in a variety of elegantly designed rooms, each tailored to provide a unique ambiance for every occasion. Whether you're looking to host a private celebration, enjoy a family meal, or indulge in a romantic dinner, our diverse selection of rooms and services ensures a memorable experience.
+        </div>
+
+        <div style={{ marginTop: "10px", fontFamily: "arial", color: "#333333", fontSize: "18px", textAlign: "justify" }}>
+          From intimate gatherings in our cozy private dining rooms to large events in our spacious banquet hall, we cater to all your needs with precision and care. Our menu features a delightful fusion of classic and contemporary dishes, crafted from the freshest ingredients and prepared by our expert chefs. In addition to our dining options, we offer personalized event planning services to help you create the perfect atmosphere, whether it's a wedding, corporate event, or a special milestone.
+        </div>
+
+        <div style={{ marginTop: "10px", fontFamily: "arial", color: "#333333", fontSize: "18px", textAlign: "justify" }}>
+          At ABC Restaurant, we believe that every meal should be a celebration, and we are committed to making your visit extraordinary. Our friendly staff is dedicated to providing impeccable service, ensuring that your time with us is nothing short of perfect. Come and discover why ABC Restaurant is the premier destination for fine dining and unforgettable experiences.         </div>
+
         <div className="offer-banner">
           <h2>Special Offer!</h2>
           <p>Book now and get 20% off on your stay. Limited time offer.</p>
-          <Button variant="contained" color="primary">
-            Book Now
-          </Button>
+
         </div>
       </Container>
 
@@ -286,11 +309,11 @@ const HomeLanding = () => {
             <Grid item xs={12} md={4}>
               <Typography variant="h6">Contact Us</Typography>
               <Typography variant="body2">
-                123 Beach Road, Oceanville
+                ABC Restaurant, Colombo 2
               </Typography>
-              <Typography variant="body2">Phone: (123) 456-7890</Typography>
+              <Typography variant="body2">Phone: 011 2 345 134</Typography>
               <Typography variant="body2">
-                Email: info@oceanviewhotel.com
+                Email: info@abcrestaurant.com
               </Typography>
             </Grid>
             <Grid item xs={12} md={4}>
@@ -315,24 +338,10 @@ const HomeLanding = () => {
               <Typography variant="body2">
                 Subscribe to our newsletter for exclusive offers and updates.
               </Typography>
-              <Button
-                variant="outlined"
-                color="primary"
-                className="subscribe-btn"
-              >
-                Subscribe
-              </Button>
+
             </Grid>
           </Grid>
-          <div className="admin-login">
-            <Button
-              variant="text"
-              color="primary"
-              onClick={() => navigate("/admin")}
-            >
-              Admin Login
-            </Button>
-          </div>
+
         </Container>
       </footer>
     </div>

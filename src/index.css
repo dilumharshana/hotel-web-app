@@ -298,7 +298,7 @@ body {
 }
 
 .hero-section {
-  background-image: url("https://www.islandlife.lk/wp-content/uploads/2018/07/b5a1bb64-best_beach_hotels_in_sri_lanka.jpg");
+  background-image: url("https://www.rochesterfirst.com/wp-content/uploads/sites/66/2020/09/pexels-kaboompics-com-6267-1.jpg?w=2560&h=1440&crop=1");
   background-size: cover;
   background-position: center;
   height: 100vh;
@@ -365,7 +365,7 @@ body {
 }
 
 .footer {
-  background-color: #f5f5f5;
+  background-color: #ade5ff;
   padding: 3rem 0;
   margin-top: 4rem;
 }
@@ -435,10 +435,10 @@ body {
 }
 
 .card-title {
-  font-size: 1.2rem;
+  font-size: 25px;
   font-weight: bold;
   margin-bottom: 10px;
-  color: #333;
+
 }
 
 .card-description {
@@ -449,7 +449,6 @@ body {
 
 .card-date {
   font-size: 0.8rem;
-  color: #888;
   font-style: italic;
 }
 

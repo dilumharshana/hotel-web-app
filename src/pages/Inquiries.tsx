@@ -1,29 +1,33 @@
-import { Box, CardContent, Container, Grid, Typography } from "@mui/material";
+import { Box, Button, CardContent, Container, Grid, Typography } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { LoadingComponent } from "../components/LoadingComponent";
 
 export const Inquiries = () => {
-  const [offersLoading, setOffersLoading] = useState(true);
-  const [offers, setOffers] = useState([]);
+  const [inquirysLoading, setinquirysLoading] = useState(true);
+  const [inquirys, setinquirys] = useState([]);
   const [open, setOpen] = useState(false);
-  const [selectedOffer, setSelectedOffer] = useState<Object | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [selectedinquiry, setSelectedinquiry] = useState<Object | null>(null);
+
 
   useEffect(() => {
-    handleLoadOffers();
+    handleLoadinquirys();
   }, []);
 
-  const handleLoadOffers = async () => {
+  const handleLoadinquirys = async () => {
     try {
-      setOffersLoading(true);
+      setinquirysLoading(true);
       const response = await axios.get("http://127.0.0.1:5000/inquiry");
-      setOffers(response.data.inquiries);
+
+      if (response?.data?.status == "success") {
+        handleLoadinquirys()
+      }
+      setinquirys(response.data.inquiries);
     } catch (error) {
       console.log(error);
     } finally {
-      setOffersLoading(false);
+      setinquirysLoading(false);
     }
   };
 
@@ -31,11 +35,11 @@ export const Inquiries = () => {
     <>
       <Toaster />
 
-      {offersLoading && (
+      {inquirysLoading && (
         <LoadingComponent title="Just a movement, Loading Inquiries..." />
       )}
 
-      {!offersLoading && offers?.length == 0 && (
+      {!inquirysLoading && inquirys?.length == 0 && (
         <Box
           display="flex"
           alignItems="center"
@@ -48,24 +52,12 @@ export const Inquiries = () => {
         </Box>
       )}
 
-      {!offersLoading && offers?.length > 0 && (
+      {!inquirysLoading && inquirys?.length > 0 && (
         <Container>
           <Grid container direction="row">
             <Grid container direction="row" gap={4}>
-              {offers?.map((offer) => (
-                <Grid style={{ width: "100%" }}>
-                  <CardContent>
-                    <Typography variant="body2" color="text.secondary">
-                      <strong>Name - {offer?.NAME}</strong>
-
-                      <p>
-                        <strong>Inquiry - {offer?.inquiry}</strong>
-                      </p>
-                      <p>Email - {offer?.EMAIL}</p>
-                      <p>Contact Number - {offer?.contact_number}</p>
-                    </Typography>
-                  </CardContent>
-                </Grid>
+              {inquirys?.map((inquiry) => (
+                <Inquiry inquiry={inquiry} />
               ))}
             </Grid>
           </Grid>
@@ -74,3 +66,46 @@ export const Inquiries = () => {
     </>
   );
 };
+
+
+const Inquiry = ({ inquiry }) => {
+
+  const [reply, setReply] = useState('')
+  const [loading, setLoading] = useState(false);
+
+  const handleSendReply = async () => {
+    try {
+      setLoading(true)
+      const response = await axios.post('http://127.0.0.1:5000/reply-inquiry', {
+        reply,
+        customerEmail: inquiry?.EMAIL,
+        inquiryId: inquiry?.ID
+      })
+    } catch (error) {
+      console.log("error =>", error);
+    }
+    finally {
+      setLoading(false)
+    }
+  }
+
+  return <Grid style={{ width: "100%", padding: "30px", border: "1px solid gray", borderRadius: "10px" }}>
+    <CardContent>
+      <Typography variant="h5" color="text.secondary">
+        <strong>Customer - {inquiry?.NAME}</strong>
+
+
+      </Typography>
+      <p>Email - {inquiry?.EMAIL}</p>
+      <p>Contact Number - {inquiry?.contact_number}</p>
+      <br />
+      <p>
+        <strong>Inquiry - </strong> {inquiry?.inquiry}
+      </p>
+    </CardContent>
+    <Box display="flex" flexDirection="column" alignItems="flex-end">
+      <textarea name="" id="" style={{ width: "100%", height: "200px" }} onChange={(e) => setReply(e.target.value)}></textarea>
+      <Button variant="contained" color="success" style={{ width: '200px', marginTop: "10px" }} onClick={handleSendReply} disabled={loading}>Send Reply</Button>
+    </Box>
+  </Grid>
+}

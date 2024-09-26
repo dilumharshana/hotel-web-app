@@ -86,7 +86,7 @@ const CustomerPanel = ({ availableRooms = 0, availableBanquetHalls = 0 }) => {
           icon: "✅"
         });
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const handleLogOut = () => {
@@ -124,10 +124,10 @@ const CustomerPanel = ({ availableRooms = 0, availableBanquetHalls = 0 }) => {
                   <CardContent>
                     <HotelIcon className="availability-icon" />
                     <Typography variant="h6" color="primary">
-                      Available Rooms
+                      Rooms
                     </Typography>
                     <Typography variant="h3" color="textPrimary">
-                      24
+
                     </Typography>
                   </CardContent>
                 </Card>
@@ -137,10 +137,10 @@ const CustomerPanel = ({ availableRooms = 0, availableBanquetHalls = 0 }) => {
                   <CardContent>
                     <MeetingRoomIcon className="availability-icon" />
                     <Typography variant="h6" color="primary">
-                      Available Banquet Halls
+                      Banquet Halls ( coming soon )
                     </Typography>
                     <Typography variant="h3" color="textPrimary">
-                      3
+
                     </Typography>
                   </CardContent>
                 </Card>
@@ -170,8 +170,10 @@ const CustomerPanel = ({ availableRooms = 0, availableBanquetHalls = 0 }) => {
               <LocalOfferIcon className="section-icon" /> Special Offers
             </Typography>
             <Grid container spacing={3} mt={3}>
-              {offers?.map((offer, index) => (
-                <Grid item xs={12} sm={6} md={3} key={index}>
+              {offers?.map((offer, index) => {
+
+                if (offer?.IS_ACTIVE == 0) return <></>
+                return <Grid item xs={12} sm={6} md={3} key={index}>
                   <Card className="offer-card">
                     <CardContent>
                       <Typography variant="h6">{offer.NAME}</Typography>
@@ -197,7 +199,7 @@ const CustomerPanel = ({ availableRooms = 0, availableBanquetHalls = 0 }) => {
                     </CardContent>
                   </Card>
                 </Grid>
-              ))}
+              })}
             </Grid>
           </StyledPaper>
 
@@ -206,8 +208,10 @@ const CustomerPanel = ({ availableRooms = 0, availableBanquetHalls = 0 }) => {
               <RoomServiceIcon className="section-icon" /> Our Services
             </Typography>
             <Grid container spacing={3} mt={3}>
-              {services.map((service, index) => (
-                <Grid item xs={12} sm={6} md={4} key={index}>
+              {services.map((service, index) => {
+                if (service?.IS_ACTIVE == 0) return <></>
+
+                return <Grid item xs={12} sm={6} md={4} key={index}>
                   <Card className="customer-panel-service-card">
                     <CardContent className="customer-panel-service-card">
                       <Typography variant="h4">{service.NAME}</Typography>
@@ -218,7 +222,7 @@ const CustomerPanel = ({ availableRooms = 0, availableBanquetHalls = 0 }) => {
                     </CardContent>
                   </Card>
                 </Grid>
-              ))}
+              })}
             </Grid>
           </StyledPaper>
         </div>
