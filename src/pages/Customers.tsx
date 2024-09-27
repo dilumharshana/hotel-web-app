@@ -1,8 +1,10 @@
-import { Box, CardContent, Container, Grid, Typography } from "@mui/material";
+import { Box, Button, CardContent, Container, Grid, Typography } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { LoadingComponent } from "../components/LoadingComponent";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 
 export const Customers = () => {
   const [offersLoading, setOffersLoading] = useState(true);
@@ -53,7 +55,7 @@ export const Customers = () => {
     try {
       setLoading(true);
 
-      await axios.delete(`http://127.0.0.1:5000/service/${offerId}`);
+      await axios.delete(`http://127.0.0.1:5000/customer/${offerId}`);
     } catch (error) {
       console.log(error);
     } finally {
@@ -118,6 +120,21 @@ export const Customers = () => {
                       <p>Contact Number - {offer?.CONTACT_NUMBER}</p>
                     </Typography>
                   </CardContent>
+                  <Box display="flex" justifyContent="flex-end" style={{ width: "100%" }}>
+
+                    <Box mr={2}>
+                      <Button
+                        variant="outlined"
+                        color="error"
+                        startIcon={<DeleteIcon />}
+                        onClick={() => handleDeleteOffer(offer?.ID)}
+                        disabled={loading}
+                      >
+                        Delete
+                      </Button>
+                    </Box>
+
+                  </Box>
                 </Grid>
               ))}
             </Grid>

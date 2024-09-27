@@ -5,6 +5,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 
 export default function Navbar({ title = "" }) {
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -20,6 +21,7 @@ export default function Navbar({ title = "" }) {
           <Typography variant="h6" color="inherit" component="div">
             {title}
           </Typography>
+
         </Toolbar>
       </AppBar>
     </Box>

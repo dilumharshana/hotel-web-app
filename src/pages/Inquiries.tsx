@@ -4,9 +4,10 @@ import { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { LoadingComponent } from "../components/LoadingComponent";
 
+
 export const Inquiries = () => {
-  const [inquirysLoading, setinquirysLoading] = useState(true);
-  const [inquirys, setinquirys] = useState([]);
+  const [inquirysLoading, setInquirysLoading] = useState(true);
+  const [inquirys, setInquirys] = useState([]);
   const [open, setOpen] = useState(false);
   const [selectedinquiry, setSelectedinquiry] = useState<Object | null>(null);
 
@@ -17,17 +18,17 @@ export const Inquiries = () => {
 
   const handleLoadinquirys = async () => {
     try {
-      setinquirysLoading(true);
+      setInquirysLoading(true);
       const response = await axios.get("http://127.0.0.1:5000/inquiry");
 
       if (response?.data?.status == "success") {
         handleLoadinquirys()
       }
-      setinquirys(response.data.inquiries);
+      setInquirys(response.data.inquiries);
     } catch (error) {
       console.log(error);
     } finally {
-      setinquirysLoading(false);
+      setInquirysLoading(false);
     }
   };
 
@@ -54,10 +55,14 @@ export const Inquiries = () => {
 
       {!inquirysLoading && inquirys?.length > 0 && (
         <Container>
+
+          <Box style={{ marginBottom: "40px" }}>
+            <Typography variant="h4">Customer Inquiries</Typography>
+          </Box>
           <Grid container direction="row">
             <Grid container direction="row" gap={4}>
               {inquirys?.map((inquiry) => (
-                <Inquiry inquiry={inquiry} />
+                <Inquiry inquiry={inquiry} handleLoadinquirys={handleLoadinquirys} />
               ))}
             </Grid>
           </Grid>
@@ -68,10 +73,11 @@ export const Inquiries = () => {
 };
 
 
-const Inquiry = ({ inquiry }) => {
+const Inquiry = ({ inquiry, handleLoadinquirys }) => {
 
   const [reply, setReply] = useState('')
   const [loading, setLoading] = useState(false);
+
 
   const handleSendReply = async () => {
     try {
@@ -79,8 +85,16 @@ const Inquiry = ({ inquiry }) => {
       const response = await axios.post('http://127.0.0.1:5000/reply-inquiry', {
         reply,
         customerEmail: inquiry?.EMAIL,
-        inquiryId: inquiry?.ID
+        inquiryId: inquiry?.id
       })
+
+      handleLoadinquirys()
+
+
+      toast("Reply sent successfully !.", {
+        icon: "✅"
+      });
+
     } catch (error) {
       console.log("error =>", error);
     }

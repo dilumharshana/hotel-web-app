@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { Card, CardContent, Typography, Button, Box } from "@mui/material";
 import {
@@ -20,6 +20,7 @@ import {
   LocalOffer
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import { usePDF } from "react-to-pdf";
 
 const AdminDashboard = () => {
   const [offers, setOffers] = useState([]);
@@ -29,6 +30,7 @@ const AdminDashboard = () => {
   const [customers, setCustomers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
+  const { toPDF, targetRef } = usePDF({ filename: 'ABC Restaurant report.pdf' });
 
   useEffect(() => {
     fetchData();
@@ -94,10 +96,11 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="admin-dashboard">
+    <div className="admin-dashboard" ref={targetRef}>
       <h1 style={{ fontFamily: "Arial", fontSize: "20px" }}>Welcome Back Admin 🎉</h1>
       <Box display="flex" justifyContent="flex-end" >
-        <Button onClick={handleLogOut} variant="contained" color="warning" style={{ width: "250px" }}>Log out</Button>
+        <Button variant="outlined" onClick={() => toPDF()}>Download AS A REPORT</Button>
+        <Button onClick={handleLogOut} variant="contained" color="warning" style={{ width: "250px", marginLeft: "20px" }}>Log out</Button>
       </Box >
       <div className="dashboard-cards">
         <Card className="dashboard-card">

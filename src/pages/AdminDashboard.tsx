@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { Grid, Tab, Tabs, Typography, Box } from "@mui/material";
+import { Grid, Tab, Tabs, Typography, Box, Button } from "@mui/material";
 import { Offers } from "./Offers";
 import { Services } from "./Services";
 import Dashboard from "./Dashboard";
 import { Customers } from "./Customers";
 import { Inquiries } from "./Inquiries";
+import { useNavigate } from "react-router-dom";
 
 // Tab panel component
 function TabPanel(props: any) {
@@ -30,6 +31,7 @@ function TabPanel(props: any) {
 // Main Dashboard component
 const AdminDashboard = () => {
   const [value, setValue] = useState(0);
+  const isSuperAdmin = JSON.parse(localStorage.getItem('customer_data'))?.role == "super_admin"
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -47,32 +49,32 @@ const AdminDashboard = () => {
             aria-label="Vertical tabs example"
             className="vertical-tabs"
           >
-            <Tab label="Dashboard" />
-            <Tab label="Customers" />
+            {isSuperAdmin && <Tab label="Dashboard" />}
             <Tab label="Offers" />
             <Tab label="Services" />
-            <Tab label="Rooms" />
-            <Tab label="Inquires" />
+            {/* <Tab label="Rooms" /> */}
+            {isSuperAdmin && <Tab label="Inquires" />}
+            <Tab label="Customers" />
           </Tabs>
+
         </Grid>
         <Grid item className="right-panel">
-          <TabPanel value={value} index={0}>
+          {isSuperAdmin && <TabPanel value={value} index={0}>
             <Dashboard />
-          </TabPanel>
-          <TabPanel value={value} index={1}>
-            <Customers />
-          </TabPanel>
-          <TabPanel value={value} index={2} className="full-screen-parent-box">
+          </TabPanel>}
+          <TabPanel value={value} index={isSuperAdmin ? 1 : 0} className="full-screen-parent-box">
             <Offers />
           </TabPanel>
-          <TabPanel value={value} index={3}>
+          <TabPanel value={value} index={isSuperAdmin ? 2 : 1}>
             <Services />
           </TabPanel>
-          <TabPanel value={value} index={4} disabled>
-            Rooms Content
-          </TabPanel>
-          <TabPanel value={value} index={5}>
+
+          {isSuperAdmin && <TabPanel value={value} index={isSuperAdmin ? 3 : 2}>
             <Inquiries />
+          </TabPanel>}
+
+          <TabPanel value={value} index={isSuperAdmin ? 4 : 3}>
+            <Customers />
           </TabPanel>
         </Grid>
       </Grid>

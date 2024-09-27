@@ -95,14 +95,17 @@ export const Services = () => {
 
       {!offersLoading && (
         <Grid display="flex" justifyContent="end" sm={12} mb={5}>
-          <Button
-            variant="contained"
-            color="success"
-            onClick={handleOpen}
-            startIcon={<LocalOfferIcon />}
-          >
-            {`Create`} Service
-          </Button>
+          <Box display="flex" flexDirection="column" alignItems="flex-start" style={{ width: "100%" }}>
+            <Button
+              variant="contained"
+              color="success"
+              onClick={handleOpen}
+              startIcon={<LocalOfferIcon />}
+            >
+              {`Create`} Service
+            </Button>
+          </Box>
+
           <ServiceModal
             mode={selectedOffer ? "edit" : "create"}
             data={selectedOffer}

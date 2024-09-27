@@ -92,6 +92,7 @@ export const OfferAndServiceModal = ({
                           setFieldValue("endingDate", date)
                         }
                         value={selectedDate}
+                        minDate={new Date()}
                       />
                     </Box>
                   </Box>

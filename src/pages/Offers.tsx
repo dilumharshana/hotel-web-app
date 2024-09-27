@@ -6,6 +6,7 @@ import { OffersModal } from "../components/OffersModal";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 export const Offers = () => {
   const [offersLoading, setOffersLoading] = useState(true);
@@ -13,6 +14,9 @@ export const Offers = () => {
   const [open, setOpen] = useState(false);
   const [selectedOffer, setSelectedOffer] = useState<Object | null>(null);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate()
+
+  const isSuperAdmin = JSON.parse(localStorage.getItem('customer_data'))?.role == "super_admin"
 
   useEffect(() => {
     handleLoadOffers();
@@ -85,9 +89,17 @@ export const Offers = () => {
     setSelectedOffer(offer);
   };
 
+  const handleLogOut = () => {
+    localStorage.removeItem("customer_data");
+    navigate("/");
+  };
   return (
     <>
       {/* <h1 className="admin-panel-tab-heading">Hotel Offers</h1> */}
+
+      {!isSuperAdmin && <Box display="flex" justifyContent="flex-end" >
+        <Button onClick={handleLogOut} variant="contained" color="warning" style={{ width: "150px", marginBottom: "30px" }}>Log out</Button>
+      </Box >}
 
       <Toaster />
 
@@ -97,14 +109,17 @@ export const Offers = () => {
 
       {!offersLoading && (
         <Grid display="flex" justifyContent="end" sm={12} mb={5}>
-          <Button
-            variant="contained"
-            color="success"
-            onClick={handleOpen}
-            startIcon={<LocalOfferIcon />}
-          >
-            {`Create`} Offer
-          </Button>
+          <Box display="flex" flexDirection="column" alignItems="flex-start" style={{ width: "100%" }}>
+            <Button
+              variant="contained"
+              color="success"
+              onClick={handleOpen}
+              startIcon={<LocalOfferIcon />}
+              style={{ width: "200px" }}
+            >
+              {`Create`} Offer
+            </Button>
+          </Box>
           <OffersModal
             mode={selectedOffer ? "edit" : "create"}
             data={selectedOffer}
